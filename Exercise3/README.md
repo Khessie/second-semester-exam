@@ -1,14 +1,18 @@
-/etc/passwd
+<li><b>
+1. /etc/passwd
 
-![passwd](https://user-images.githubusercontent.com/83411128/187049169-3da6d8d6-4b1f-4388-a268-e2f4dc751604.png)
-
-
-/etc/group
-
-![group1](https://user-images.githubusercontent.com/83411128/187049248-8b563a1b-097f-4a25-a8f2-6d96826ed32d.png)
-![group2](https://user-images.githubusercontent.com/83411128/187049272-2d60057f-9a85-48a0-a72d-d5aeb0761774.png)
+![passwd](https://user-images.githubusercontent.com/83411128/188337232-057bca5f-ae5f-46df-872c-9ff9981fe52f.png)
 
 
+<li><b>
+2. /etc/group
 
-/etc/sudoers
-![sudoers](https://user-images.githubusercontent.com/83411128/187049226-87aafd32-cf66-4738-885e-d03dac764861.png)
+![group1](https://user-images.githubusercontent.com/83411128/188337258-6d53c458-a098-4868-9341-dc828f5cbc35.png)
+![group2](https://user-images.githubusercontent.com/83411128/188337277-7cb4bbe2-4e6d-49f6-83d2-6f61b7e8cef4.png)
+
+
+
+<li><b>
+3. /etc/sudoers
+
+![sudoers](https://user-images.githubusercontent.com/83411128/188337311-a214c6ed-4f84-46c2-b522-b445ec7877d2.png)
