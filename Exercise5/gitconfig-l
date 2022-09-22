@@ -1,0 +1,11 @@
+khessie@Miriam-Khessie:~/altschool-cloud-exercises$ git config -l
+user.email=khessieevans@yahoo.com
+user.name=Khessie
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+remote.origin.url=https://github.com/Khessie/altschool-cloud-exercises.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.master.remote=origin
+branch.master.merge=refs/heads/master
