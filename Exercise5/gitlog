@@ -1,0 +1,36 @@
+khessie@Miriam-Khessie:~/altschool-cloud-exercises$ git log
+commit 985d8141cc812d74ebaa35e8926071e05960f0ed (HEAD -> master, origin/master)
+Merge: f03b56b 9c9b1d6
+Author: Khessie <khessieevans@yahoo.com>
+Date:   Thu Sep 22 04:15:55 2022 +0100
+
+    Merge branch 'master' of https://github.com/Khessie/altschool-cloud-exercises
+
+commit f03b56b67506d8167b1caf9eb9d932baf7c85bd3
+Author: Khessie <khessieevans@yahoo.com>
+Date:   Thu Sep 22 04:15:07 2022 +0100
+
+    added the output of git remoteg -v to the gitremote-v file
+
+commit 34e94a65a9c4b0c577d83e06ff9950d5550bbb69
+Author: Khessie <khessieevans@yahoo.com>
+Date:   Thu Sep 22 04:14:05 2022 +0100
+
+    added the output of git config -l to the gitconfig-l file
+
+commit 0e7f93e4917139e1c3e21b6eff2414ba570c4f8a
+Author: Khessie <khessieevans@yahoo.com>
+Date:   Thu Sep 22 04:10:15 2022 +0100
+
+    new trial file added
+
+commit 9c9b1d6176a8b31a508f398b45a8d6b0ff3ed69f
+Author: Miriam Efedhoma <83411128+Khessie@users.noreply.github.com>
+Date:   Thu Sep 22 00:23:31 2022 -0200
+
+    Update README.md
+
+commit 3387222f8b7a96376eb42d7c77e3971ee821e6d7
+Author: Miriam Efedhoma <83411128+Khessie@users.noreply.github.com>
+Date:   Thu Sep 22 00:21:36 2022 -0200
+:
