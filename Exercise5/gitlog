@@ -1,5 +1,17 @@
 khessie@Miriam-Khessie:~/altschool-cloud-exercises$ git log
-commit 985d8141cc812d74ebaa35e8926071e05960f0ed (HEAD -> master, origin/master)
+commit 0b62d3b8b730ca6e0faa4c8df1b9cb54da1fb213 (HEAD -> master, origin/master)
+Author: Khessie <khessieevans@yahoo.com>
+Date:   Thu Sep 22 04:33:29 2022 +0100
+
+    changes made and markdown files created
+
+commit 025cef0da05e7b194d63f97699be63a13c2b45f7
+Author: Khessie <khessieevans@yahoo.com>
+Date:   Thu Sep 22 04:29:21 2022 +0100
+
+    added the output of git log to the gitlog file
+
+commit 985d8141cc812d74ebaa35e8926071e05960f0ed
 Merge: f03b56b 9c9b1d6
 Author: Khessie <khessieevans@yahoo.com>
 Date:   Thu Sep 22 04:15:55 2022 +0100
@@ -21,16 +33,4 @@ Date:   Thu Sep 22 04:14:05 2022 +0100
 commit 0e7f93e4917139e1c3e21b6eff2414ba570c4f8a
 Author: Khessie <khessieevans@yahoo.com>
 Date:   Thu Sep 22 04:10:15 2022 +0100
-
-    new trial file added
-
-commit 9c9b1d6176a8b31a508f398b45a8d6b0ff3ed69f
-Author: Miriam Efedhoma <83411128+Khessie@users.noreply.github.com>
-Date:   Thu Sep 22 00:23:31 2022 -0200
-
-    Update README.md
-
-commit 3387222f8b7a96376eb42d7c77e3971ee821e6d7
-Author: Miriam Efedhoma <83411128+Khessie@users.noreply.github.com>
-Date:   Thu Sep 22 00:21:36 2022 -0200
 :
