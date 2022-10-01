@@ -1,0 +1,29 @@
+Received: by ubuntu-focal (sSMTP sendmail emulation); Sat, 01 Oct 2022 07:06:01 +0100
+From: vagrant@ubuntu-focal
+Date: Sat, 01 Oct 2022 07:06:01 +0100
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="504510709-1664604361=:101622"
+Subject: RAM USAGE REPORT
+To: <khessieevans@yahoo.com>
+X-Mailer: mail (GNU Mailutils 3.7)
+
+--504510709-1664604361=:101622
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: attachment
+Content-Transfer-Encoding: 8bit
+Content-ID: <20221001070601.101622.1@ubuntu-focal>
+
+Dear Support, please find attached to this mail the memory log for today
+
+--504510709-1664604361=:101622
+Content-Type: application/octet-stream; name="ram.log"
+Content-Disposition: attachment; filename="/home/vagrant/memory_logs/ram.log"
+Content-Transfer-Encoding: base64
+Content-ID: <20221001070601.101622.1@ubuntu-focal>
+
+U2F0IE9jdCAgMSAwNzowNjowMSBXQVQgMjAyMgogICAgICAgICAgICAgIHRvdGFsICAgICAgICB1
+c2VkICAgICAgICBmcmVlICAgICAgc2hhcmVkICBidWZmL2NhY2hlICAgYXZhaWxhYmxlCk1lbTog
+ICAgICAgICAgOTc2TWkgICAgICAgMjAyTWkgICAgICAgIDk1TWkgICAgICAgMy4wTWkgICAgICAg
+Njc4TWkgICAgICAgNjIyTWkKU3dhcDogICAgICAgICAgICAwQiAgICAgICAgICAwQiAgICAgICAg
+ICAwQgo=
+--504510709-1664604361=:101622--
