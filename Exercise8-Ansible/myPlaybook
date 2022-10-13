@@ -1,0 +1,30 @@
+---
+- name: Setup Apache and php
+  hosts: ip-address
+  become: true
+  become_method: sudo
+
+
+  tasks:
+          - name: Install apache and php
+            apt:
+                name:
+                      - apache2
+                      - libapache2-mod-php
+                state: latest
+
+          - name: Setting the timezone to Africa/Lagos
+            command: timedatectl set-timezone "Africa/Lagos"
+
+          - name: display time
+            command: timedatectl
+
+
+
+          - name: display index.php in server
+            copy:
+                    src: index.php
+                    dest: /var/www/html/index.php
+                    owner: root
+                    group: root
+                    mode: 0644
