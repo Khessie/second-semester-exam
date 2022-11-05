@@ -1,0 +1,14 @@
+---
+- name: Deploy
+  become: true
+  hosts: webserver
+  tasks:
+       - name: Git Repo
+         apt:
+
+    - git_repo
+    - name: install apache2
+    - php_config
+    - mysql_config
+    - composer
+

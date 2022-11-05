@@ -1,0 +1,291 @@
+---
+- name: Setup server
+  hosts: webserver
+
+  tasks:
+    - name: Installation install software-properties-common
+      apt: name=software-properties-common
+
+    - name: Add dependencies for PHP versions (Debian).
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+        state: present
+      when: ansible_distribution == "Debian"
+
+    - name: Add Ondrej Sury's apt key (Debian).
+      apt_key:
+        url: https://packages.sury.org/php/apt.gpg
+        id: 15058500A0235D97F5D10063B188E2B695BD4743
+        state: present
+      when: ansible_distribution == "Debian"
+
+    - name: Add Ondrej Sury's repo (Debian).
+      apt_repository:
+        repo: "deb https://packages.sury.org/php/ {{ ansible_distribution_release }} main"
+        state: present
+      register: php_ondrej_debian_repo
+      when: ansible_distribution == "Debian"
+
+    - name: Update apt caches after repo is added (Debian).
+      apt: update_cache=true
+      when:
+        - php_ondrej_debian_repo.changed
+        - ansible_distribution == "Debian"
+      tags: ["skip_ansible_lint"]
+
+    - name: Installation of PHP 8.1
+      apt: name=php8.1 state=present
+
+    - name: install lamp stack
+      apt:
+        pkg:
+          - php8.1
+          - php8.1-mysql
+          - php8.1-curl
+          - php8.1-xsl
+          - php8.1-cgi
+          - php8.1-gd
+          - php8.1-mbstring
+          - php8.1-zip
+          - libapache2-mod-php
+        state: present
+        update_cache: yes
+
+    - name: Install packages
+      apt:
+        pkg:
+          - php8.1
+          - php-xml
+          - php-pgsql
+          - libapache2-mod-php
+          - apache2
+          - git
+          - zip
+          - unzip
+          - curl
+          - php-curl
+          - wget
+        state: latest
+        update_cache: yes
+      become: yes
+
+    - name: Install Uncomplicated Firewall
+      apt: name=ufw state=present
+    - name: Allow Apache
+      ufw: name=WWW rule=allow
+    - name: Allow Apache Full
+      ufw: name='WWW Full' rule=allow
+    - name: Allow OpenSSH
+      ufw: name=OpenSSH rule=allow
+    - name: Allow access to tcp port 22 (SSH)
+      ufw: rule=allow port='22' proto=tcp
+    - name: Allow access to tcp port 80 (HTTP)
+      ufw: rule=allow port='80' proto=tcp
+    - name: Allow access to port 443 (HTTPS)
+      ufw: rule=allow port='443'
+    - name: Allow access to port 853 (DNS over TLS)
+      ufw: rule=allow port='853'
+    - name: Allow access to port 3306 (MySQL Server)
+      ufw: rule=allow port='3306'
+    - name: Allow access to port 5432 (PostgreSQL Server)
+      ufw: rule=allow port='5432'
+    - name: Enable Uncomplicated Firewall
+      ufw: state=enabled policy=allow
+
+    - name: Install Python3
+      apt: name=python3 state=latest
+    - name: Install Pip
+      apt: name=pip state=latest
+
+    - name: Install MySQL server
+      apt:
+        name: mysql-server
+        state: latest
+
+    - name: Install MySQL client
+      apt:
+        name: mysql-client
+        state: latest
+
+    - name: Install PyMySQL Library
+      pip: name=pymysql state=latest
+
+    - name: Start the MySQL service
+      service:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: Change the authentication plugin of MySQL root user to mysql_native_password
+      command: mysql -u root -e 'UPDATE mysql.user SET plugin="mysql_native_password" WHERE user="root" AND host="localhost"'
+
+    - name: Reload all Privileges
+      command: mysql -u root -e 'FLUSH PRIVILEGES'
+
+    - name: Set MySQL root password before installing
+      debconf: name='mysql-server' question='mysql-server/root_password' value='root'  vtype='password'
+      become: yes
+
+    - name: Confirm MySQL root password before installing
+      debconf: name='mysql-server' question='mysql-server/root_password_again' value='root' vtype='password'
+      become: yes
+
+    - name: Create a Database
+      mysql_db:
+        login_user: "root"
+        login_password: "root"
+        name: "miriamefedhoma"
+        state: present
+
+    - name: Create a Database User
+      mysql_user:
+        login_user: root
+        login_password: root
+        name: admin
+        password: root
+        state: present
+        host: "%"
+
+    - name: Remove the MySQL Test Database
+      mysql_db:
+        login_user: root
+        login_password: root
+        name: test
+        state: absent
+
+    - name: Download and install Composer
+      shell: curl -sS https://getcomposer.org/installer | php
+      args:
+        chdir: /usr/src/
+        creates: /usr/local/bin/composer
+        warn: false
+        mode: u+x
+      become: yes
+
+    - name: Add Composer to global path
+      copy:
+        dest: /usr/local/bin/composer
+        group: root
+        mode: "0755"
+        owner: root
+        src: /usr/src/composer.phar
+        remote_src: yes
+      become: yes
+
+    - name: clone laravel codebase
+      git:
+        repo: https://github.com/f1amy/laravel-realworld-example-app.git
+        dest: /var/www/myapp
+        force: yes
+      become: yes
+
+    - name: take ownership of myapp folder
+      file:
+        path: /var/www/myapp
+        state: directory
+        recurse: yes
+        owner: www-data
+        group: www-data
+      become: yes
+
+    - name: set permissions for Laravel storage folder
+      file:
+        path: /var/www/myapp/storage
+        state: directory
+        recurse: yes
+        mode: "0755"
+      become: yes
+
+    - name: Change the Mode of the Cache Folder
+      file:
+        path: /var/www/myapp/bootstrap/cache
+        state: directory
+        recurse: yes
+        mode: "0775"
+
+    - name: install laravel dependencies
+      composer:
+        command: update
+        working_dir: /var/www/myapp
+      become: yes
+
+    - name: copy env file
+      copy:
+        src: /var/www/myapp/.env.example
+        remote_src: yes
+        dest: /var/www/myapp/.env
+        mode: "0775"
+
+    - name: Change Ownership To be Assigned to Web Servers
+      file:
+        path: /var/www/myapp/.env
+        state: file
+        owner: www-data
+        group: www-data
+
+    - name: copy apache config
+      copy:
+        src: ./myapp.conf
+        dest: /etc/apache2/sites-available/myapp.conf
+        mode: "0644"
+      become: yes
+
+    - name: Set the App Key in the .env file
+      command: php /var/www/myapp/artisan key:generate
+    - name: Give Application Speed Boost
+      command: php /var/www/myapp/artisan config:cache
+    - name: Install the MySQL Database
+      command: php /var/www/myapp/artisan migrate:fresh
+
+    - name: Uncomment the route so the default page opens
+      copy:
+        src: web.php
+        dest: /var/www/myapp/routes
+        mode: "0775"
+
+    - name: Change the Mode of the web.php file so it can also be in the www-data
+      file:
+        path: /var/www/myapp/routes/web.php
+        state: file
+        owner: www-data
+        group: www-data
+        mode: "0775"
+
+    - name: set server name
+      replace:
+        path: /etc/apache2/sites-available/myapp.conf
+        owner: root
+        group: root
+        mode: "0644"
+      become: yes
+
+    - name: Copy the HyperText Access File to Redirect the Page to Display the public files
+      copy:
+        src: .htaccess
+        dest: /var/www/myapp
+
+    - name: Change the Mode of the .htaccess file so it can also be in the www-data
+      file:
+        path: /var/www/myapp/.htaccess
+        state: file
+        owner: www-data
+        group: www-data
+        mode: "0775"
+
+    - name: Disable the default apache web page
+      command: a2dissite 000-default.conf
+    - name: Restart apache
+      service:
+        name: apache2
+        state: restarted
+
+    - name: enabling the new config
+      shell: |
+        a2ensite myapp.conf
+        a2dissite 000-default.conf
+        a2enmod rewrite
+        service apache2 restart
+      become: yes
+
