@@ -109,6 +109,18 @@
         name: mysql-client
         state: latest
 
+    - name: Installing Mysql  and dependencies
+      package:
+       name: "{{item}}"
+       state: present
+       update_cache: yes
+      loop:
+        - mysql-server
+        - mysql-client
+        - python3-mysqldb
+        - libmysqlclient-dev
+      become: yes
+
     - name: Install PyMySQL Library
       pip: name=pymysql state=latest
 
@@ -132,47 +144,59 @@
       debconf: name='mysql-server' question='mysql-server/root_password_again' value='root' vtype='password'
       become: yes
 
-    - name: Create a Database
+    - name: Create a database user
+      mysql_user:
+        name: "admin"
+        password: "root"
+        priv: '*.*:ALL'
+        host: '%'
+        state: present
+
+    - name: Create a database
       mysql_db:
-        login_user: "root"
-        login_password: "root"
         name: "miriamefedhoma"
         state: present
 
-    - name: Create a Database User
-      mysql_user:
-        login_user: root
-        login_password: root
-        name: admin
-        password: root
-        state: present
-        host: "%"
+    - name: Enable remote login to mysql
+      lineinfile:
+         path: /etc/mysql/mysql.conf.d/mysqld.cnf
+         regexp: '^bind-address'
+         line: 'bind-address = 0.0.0.0'
+         backup: yes
 
-    - name: Remove the MySQL Test Database
-      mysql_db:
-        login_user: root
-        login_password: root
-        name: test
-        state: absent
+    - name: Set php_executable variable to a default if not defined.
+      set_fact:
+         php_executable: php
+      when: php_executable is not defined
 
-    - name: Download and install Composer
-      shell: curl -sS https://getcomposer.org/installer | php
-      args:
-        chdir: /usr/src/
-        creates: /usr/local/bin/composer
-        warn: false
-        mode: u+x
-      become: yes
+    - name: Check if Composer is installed.
+      stat: "path=/root/altschool-cloud-exercises/ExamProject/usr/src/"
+      register: composer_bin
+
+    - name: Get Composer installer signature.
+      uri:
+        url: https://composer.github.io/installer.sig
+        return_content: true
+      register: composer_installer_signature
+      when: not composer_bin.stat.exists
+
+    - name: Download Composer installer.
+      get_url:
+        url: https://getcomposer.org/installer
+        dest: /tmp/composer-installer.php
+        mode: 0755
+        checksum: "sha384:{{ composer_installer_signature.content }}"
+      when: not composer_bin.stat.exists
+
+    - name: Run Composer installer.
+      command: >
+          {{ php_executable }} composer-installer.php chdir=/tmp
+      when: not composer_bin.stat.exists
 
     - name: Add Composer to global path
-      copy:
-        dest: /usr/local/bin/composer
-        group: root
-        mode: "0755"
-        owner: root
-        src: /usr/src/composer.phar
-        remote_src: yes
-      become: yes
+      command: >
+        mv /tmp/composer.phar "/usr/local/bin/composer"  creates="/usr/local/bin/composer"
+      when: not composer_bin.stat.exists
 
     - name: clone laravel codebase
       git:
@@ -207,9 +231,9 @@
 
     - name: install laravel dependencies
       composer:
-        command: update
-        working_dir: /var/www/myapp
-      become: yes
+          command: update
+          working_dir: /var/www/myapp
+    
 
     - name: copy env file
       copy:
@@ -236,7 +260,7 @@
       command: php /var/www/myapp/artisan key:generate
     - name: Give Application Speed Boost
       command: php /var/www/myapp/artisan config:cache
-    - name: Install the MySQL Database
+    - name: Migrate the MySQL Database
       command: php /var/www/myapp/artisan migrate:fresh
 
     - name: Uncomment the route so the default page opens
