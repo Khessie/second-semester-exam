@@ -1,0 +1,21 @@
+Hit:1 http://security.debian.org/debian-security bullseye-security InRelease
+Ign:2 http://ppa.launchpad.net/ansible/ansible/ubuntu lunar InRelease
+Hit:3 http://deb.debian.org/debian bullseye InRelease
+Get:4 http://deb.debian.org/debian bullseye-updates InRelease [44.1 kB]
+Get:5 http://deb.debian.org/debian bullseye-backports InRelease [49.0 kB]
+Hit:6 http://repo.mysql.com/apt/debian bullseye InRelease
+Err:7 http://ppa.launchpad.net/ansible/ansible/ubuntu lunar Release
+  404  Not Found [IP: 185.125.190.52 80]
+Hit:8 https://packages.sury.org/php bullseye InRelease
+Hit:9 https://repos.insights.digitalocean.com/apt/do-agent main InRelease
+Hit:10 https://repos-droplet.digitalocean.com/apt/droplet-agent main InRelease
+Get:11 http://deb.debian.org/debian bullseye-backports/main Sources.diff/Index [63.3 kB]
+Get:12 http://deb.debian.org/debian bullseye-backports/main amd64 Packages.diff/Index [63.3 kB]
+Get:13 http://deb.debian.org/debian bullseye-backports/main Translation-en.diff/Index [63.3 kB]
+Get:14 http://deb.debian.org/debian bullseye-backports/main Sources T-2022-11-05-1403.42-F-2022-11-05-1403.42.pdiff [31 B]
+Get:15 http://deb.debian.org/debian bullseye-backports/main amd64 Packages T-2022-11-05-1403.42-F-2022-11-05-1403.42.pdiff [3769 B]
+Get:14 http://deb.debian.org/debian bullseye-backports/main Sources T-2022-11-05-1403.42-F-2022-11-05-1403.42.pdiff [31 B]
+Get:15 http://deb.debian.org/debian bullseye-backports/main amd64 Packages T-2022-11-05-1403.42-F-2022-11-05-1403.42.pdiff [3769 B]
+Get:16 http://deb.debian.org/debian bullseye-backports/main Translation-en T-2022-11-05-1403.42-F-2022-11-05-1403.42.pdiff [2701 B]
+Get:16 http://deb.debian.org/debian bullseye-backports/main Translation-en T-2022-11-05-1403.42-F-2022-11-05-1403.42.pdiff [2701 B]
+Reading package lists...
