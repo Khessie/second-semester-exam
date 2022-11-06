@@ -99,15 +99,6 @@
     - name: Install Pip
       apt: name=pip state=latest
 
-    - name: Install MySQL server
-      apt:
-        name: mysql-server
-        state: latest
-
-    - name: Install MySQL client
-      apt:
-        name: mysql-client
-        state: latest
 
     - name: Installing Mysql  and dependencies
       package:
@@ -201,13 +192,13 @@
     - name: clone laravel codebase
       git:
         repo: https://github.com/f1amy/laravel-realworld-example-app.git
-        dest: /var/www/myapp
+        dest: /var/www/html/myapp
         force: yes
       become: yes
 
     - name: take ownership of myapp folder
       file:
-        path: /var/www/myapp
+        path: /var/www/html/myapp
         state: directory
         recurse: yes
         owner: www-data
@@ -216,7 +207,7 @@
 
     - name: set permissions for Laravel storage folder
       file:
-        path: /var/www/myapp/storage
+        path: /var/www/html/myapp/storage
         state: directory
         recurse: yes
         mode: "0755"
@@ -224,21 +215,21 @@
 
     - name: Change the Mode of the Cache Folder
       file:
-        path: /var/www/myapp/bootstrap/cache
+        path: /var/www/html/myapp/bootstrap/cache
         state: directory
         recurse: yes
         mode: "0775"    
 
     - name: copy env file
       copy:
-        src: /var/www/myapp/.env.example
+        src: /var/www/html/myapp/.env.example
         remote_src: yes
-        dest: /var/www/myapp/.env
+        dest: /var/www/html/myapp/.env
         mode: "0775"
 
     - name: Change Ownership To be Assigned to Web Servers
       file:
-        path: /var/www/myapp/.env
+        path: /var/www/html/myapp/.env
         state: file
         owner: www-data
         group: www-data
@@ -251,23 +242,23 @@
       become: yes
 
     - name: Set the App Key in the .env file
-      command: php /var/www/myapp/ artisan key:generate
+      command: php /var/www/html/myapp/ artisan key:generate
     - name: Give Application Speed Boost
-      command: php /var/www/myapp/ artisan config:cache
+      command: php /var/www/html/myapp/ artisan config:cache
     - name: Migrate the MySQL Database
-      command: php /var/www/myapp/ artisan migrate:fresh
+      command: php /var/www/html/myapp/ artisan migrate:fresh
 
 
     - name: Change the Mode of the web.php file so it can also be in the www-data
       file:
-       path: /var/www/myapp/routes/web.php
+       path: /var/www/html/myapp/routes/web.php
        state: file
        owner: www-data
        group: www-data
        mode: "0775"
 
     - name: set server name
-      replace:
+      file:
         path: /etc/apache2/sites-available/myapp.conf
         owner: root
         group: root
@@ -277,27 +268,40 @@
     - name: Copy the HyperText Access File to Redirect the Page to Display the public files
       copy:
         src: .htaccess
-        dest: /var/www/myapp
+        dest: /var/www/html/myapp
 
     - name: Change the Mode of the .htaccess file so it can also be in the www-data
       file:
-        path: /var/www/myapp/.htaccess
+        path: /var/www/html/myapp/.htaccess
         state: file
         owner: www-data
         group: www-data
         mode: "0775"
 
-    - name: Disable the default apache web page
-      command: a2dissite 000-default.conf
-    - name: Restart apache
-      service:
-        name: apache2
-        state: restarted
-
-    - name: enabling the new config
-      shell: |
-        a2ensite myapp.conf
-        a2dissite 000-default.conf
-        a2enmod rewrite
-        service apache2 restart
+    - name: Disable default conf file
       become: yes
+      shell: /usr/sbin/a2dissite 000-default.conf
+
+    - name: Enable myapp.conf file
+      become: yes
+      shell: /usr/sbin/a2ensite myapp.conf
+
+    - name: Rewrite Module
+      become: yes
+      shell: /usr/sbin/a2enmod rewrite
+
+    - name: Restart Apache
+      become: yes
+      shell: systemctl restart apache2
+
+
+
+
+
+
+
+
+
+
+
+
